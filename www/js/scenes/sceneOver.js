@@ -7,7 +7,7 @@ class SceneOver extends Phaser.Scene
 
     preload()
     {
-        this.load.image("brokenShip", "images/BrokenShip.png");
+        this.load.image("brokenShip", "images/GAME_OVER_title.png");
         this.load.image("playButton", "images/buttons/2/2.png");
         this.load.image("quitButton", "images/buttons/2/5.png");
         //this.load.image("face", "images/face.png");

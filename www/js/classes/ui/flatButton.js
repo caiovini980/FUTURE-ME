@@ -24,7 +24,9 @@ class FlatButton extends Phaser.GameObjects.Container
 
         if (config.text)
         {
-            this.text1 = this.scene.add.text(0, 0, config.text);
+            this.text1 = this.scene.add.text(0, 0, config.text, {
+                font: "20px Arial"
+            });
             this.text1.setOrigin(0.5, 0.5);
 
             this.add(this.text1);

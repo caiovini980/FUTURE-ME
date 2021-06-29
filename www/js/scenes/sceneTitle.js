@@ -7,7 +7,7 @@ class SceneTitle extends Phaser.Scene
 
     preload()
     {
-        this.load.image("title", "images/title.png");
+        this.load.image("title", "images/FUTURE-ME_title.png");
         this.load.image("playButton", "images/buttons/2/2.png");
         this.load.image("quitButton", "images/buttons/2/5.png");
         this.load.image("spaceImage", "images/Background.jpg");
@@ -17,7 +17,7 @@ class SceneTitle extends Phaser.Scene
         this.load.audio("backgroundSound", "sounds/ObservingTheStar.ogg");
 
         //Fonts
-        this.load.bitmapFont("ArcadeClassicFont", "fonts/ArcadeClassicFont.png", "fonts/ArcadeClassicFont.fnt");
+        this.load.bitmapFont("ArcadeClassicFont", "fonts/ArcadeClassicFont_0.png", "fonts/ArcadeClassicFont.fnt");
     }
 
     create()

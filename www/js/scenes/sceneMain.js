@@ -1,4 +1,5 @@
 var space;
+var timer;
 //var scoreBox;
 
 class SceneMain extends Phaser.Scene
@@ -19,6 +20,7 @@ class SceneMain extends Phaser.Scene
         this.load.image("asteroid_1", "images/Asteroid_1.png");
         this.load.image("asteroid_2", "images/Asteroid_2.png");
         this.load.image("asteroid_3", "images/Asteroid_3.png");
+        this.load.image("boost", "images/Fuel.png");
 
         //Buttons
         this.load.image("buttonUp", "images/backgroundInvisible.png"); 
@@ -57,13 +59,16 @@ class SceneMain extends Phaser.Scene
         //var space = this.add.image(0, 0, "space");
         
         space.x = game.config.width / 2;
+    
+        timer = this.time.delayedCall(1000, this.onEvent, [], this);
     }
 
     //constant running loop
     update()
     {
         space.update();
-        space.moveObject();
+        space.moveAsteroid();
+        space.moveBoost();
     }
 
     exitButtonPressed()
