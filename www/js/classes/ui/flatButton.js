@@ -51,11 +51,11 @@ class FlatButton extends Phaser.GameObjects.Container
             this.back.on("pointerdown", this.pressed, this);
         }
 
-        if (model.isMobile == -1)
-        {
-            this.back.on("pointerover", this.over, this);
-            this.back.on("pointerout", this.out, this);
-        }
+        // if (model.isMobile == -1)
+        // {
+        //     this.back.on("pointerover", this.over, this);
+        //     this.back.on("pointerout", this.out, this);
+        // }
 
         this.scene.add.existing(this);
     }
