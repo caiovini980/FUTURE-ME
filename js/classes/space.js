@@ -67,6 +67,15 @@ class Space extends Phaser.GameObjects.Container
 
         //this.background.setInteractive();
         //this.background.on("pointerdown", this.moveShip, this);
+
+        /*this.scene.time.addEvent({
+            delay: 2000,                // ms
+            callback: this.addObject,
+            callbackScope: this.scene,
+            loop: true
+        });*/
+
+        this.addObject();
     }
 
     update()
@@ -90,26 +99,57 @@ class Space extends Phaser.GameObjects.Container
         }
     }
 
+    addObject()
+    {
+        var randomValue = RandomValue.randomBetweenTwoValues(0.15, 0.85);
+        var randomSpeedValue = RandomValue.randomBetweenTwoValues(1, 10);
+
+        var objects = [
+            {key: "asteroid_1", speed: randomSpeedValue}, 
+            {key: "asteroid_2", speed: randomSpeedValue}, 
+            {key: "asteroid_3", speed: randomSpeedValue}
+        ];
+
+        var index = RandomValue.randomIntegerValueBetweenTwoValues(0, objects.length);
+        var randomObject = objects[index].key;
+        
+        var objectSpeed = objects[index].speed;
+
+        this.object = this.scene.add.sprite(game.config.width * 0.5, 
+            game.config.height * randomValue, randomObject);
+
+        this.object.speed = objectSpeed;
+        this.scaleObject(this.object, game.config.width * 0.0005, game.config.height * 0.0015);
+        this.add(this.object);
+    }
+
     stopMovement()
     {
         isMovingDown = false;
         isMovingUp = false;
     }
 
-    moveShip()
+    moveObject()
     {
-        console.log(this.ship.y > game.config.height * 0.5)
+        this.object.x -= this.object.speed;
 
-        if (this.ship.y > game.config.height * 0.5)
+        if (Collision.checkCollision(this.ship, this.object) == true)
         {
-            console.log("moving ship up");
-            this.ship.y = game.config.height * 0.25;
+            this.ship.alpha = 0.5;
+            this.scene.scene.start("SceneOver");
+            emitter.emit(constants.SET_SCORE, 0);
+        }
+        else
+        {
+            this.ship.alpha = 1;
         }
 
-        else if (this.ship.y > game.config.height * 0.2)
+        if (this.object.x < - game.config.width * 0.5)
         {
-            console.log("moving ship down");
-            this.ship.y = game.config.height * 0.55;
+            this.object.destroy();
+            emitter.emit(constants.ADD_POINTS, 10);
+            console.log(model.score);
+            this.addObject();
         }
     }
 
