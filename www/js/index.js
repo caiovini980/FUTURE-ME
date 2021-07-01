@@ -21,6 +21,12 @@ function onDeviceReady()
     var config = {
         type: Phaser.WEBGL,
         scene: [SceneTitle, SceneMain, SceneOver],
+        physics: {
+            default: 'arcade',
+            arcade: {
+              debug: false,
+            }
+          },
         ...scale
     };
     constants = new Constants();

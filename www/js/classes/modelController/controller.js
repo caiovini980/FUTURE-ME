@@ -13,7 +13,7 @@ class Controller
 
     upPoints(points)
     {
-        var score = model.score;
+        var score = model.score; //10
 
         score += points;
         model.score = score;

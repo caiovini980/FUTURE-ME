@@ -28,8 +28,6 @@ class SceneTitle extends Phaser.Scene
         var mediaManager = new MediaManager({scene: this});
 
         console.log("Scene Title!");
-        //this.alignGrid = new AlignGrid({rows: 11, cols: 11, scene: this})
-        //this.alignGrid.showNumbers();
 
         //BACKGROUND CONFIG
         var background = this.add.image(0, 0, "spaceImage");

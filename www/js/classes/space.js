@@ -3,6 +3,8 @@ var isMovingDown = false;
 
 var boostRespawnTimer;
 var fuelTimer;
+var inContactAsteroid;
+var inContactBoost;
 
 var fuelLifetime = 13;
 var speed = 3;
@@ -27,7 +29,7 @@ class Space extends Phaser.GameObjects.Container
         this.scene.add.existing(this);
         
         //Add ship
-        this.ship = this.scene.add.image(
+        this.ship = this.scene.physics.add.image(
             - game.config.width * 0.30,
             game.config.height * 0.55,
             "ship"
@@ -59,6 +61,9 @@ class Space extends Phaser.GameObjects.Container
         //Add clicks
         this.buttonUp.setInteractive();
         this.buttonDown.setInteractive();
+        this.background.setInteractive();
+
+        this.background.on('pointerdown', this.getInputPosition, this);
         this.buttonUp.on('pointerdown', this.moveShipUp, this);
         this.buttonDown.on('pointerdown', this.moveShipDown, this);
 
@@ -79,6 +84,14 @@ class Space extends Phaser.GameObjects.Container
         this.text1.x = - game.config.width * 0.4;
         this.text1.y = game.config.height * 0.06;
 
+        this.scene.physics.add.overlap(this.ship, this.object, function () {
+            inContactAsteroid = true;
+          });
+
+          this.scene.physics.add.overlap(this.ship, this.boost, function () {
+            inContactBoost = true;
+          });
+
         this.add(this.text1);
     }
 
@@ -88,6 +101,16 @@ class Space extends Phaser.GameObjects.Container
         const fuel = (fuelLifetime - (fuelTimer.elapsed / 1000)).toString().split("");
 
         this.text1.setText("FUEL  " + fuel[0] + fuel[1]);
+
+        if(inContactAsteroid)
+        {
+            this.gameOver();
+        }
+
+        if(inContactBoost)
+        {
+            this.addFuel();
+        }
 
         if (isMovingUp)
         {
@@ -106,13 +129,31 @@ class Space extends Phaser.GameObjects.Container
                 this.ship.y += speed * game.config.height * 0.0023;
             }
         }
+
+        inContactAsteroid = false;
+        inContactBoost = false;
+    }
+
+    getInputPosition()
+    {
+        if (this.scene.input.y < game.config.height / 2)
+        {
+            isMovingUp = true;
+            isMovingDown = false;
+        }
+
+        else if (this.scene.input.y > game.config.height / 2)
+        {
+            isMovingUp = false;
+            isMovingDown = true;
+        }
     }
 
     addBoost()
     {
         var randomValue = RandomValue.randomBetweenTwoValues(0.15, 0.85);
 
-        this.boost = this.scene.add.sprite(game.config.width, 
+        this.boost = this.scene.physics.add.sprite(game.config.width, 
             game.config.height * randomValue, "boost");
 
         this.boost.speed = 2;
@@ -135,7 +176,7 @@ class Space extends Phaser.GameObjects.Container
         var randomObject = objects[index].key;
         var objectSpeed = objects[index].speed;
 
-        this.object = this.scene.add.sprite(game.config.width * 0.5, 
+        this.object = this.scene.physics.add.sprite(game.config.width * 0.5, 
             game.config.height * randomValue, randomObject);
 
         this.object.speed = objectSpeed;
@@ -153,7 +194,7 @@ class Space extends Phaser.GameObjects.Container
     {
         this.object.x -= this.object.speed;
 
-        if (Collision.checkCollision(this.ship, this.object) == true)
+        /*if (inContact/*Collision.checkCollision(this.ship, this.object) == true)
         {
             this.ship.alpha = 0.5;
             this.scene.scene.start("SceneOver");
@@ -170,14 +211,39 @@ class Space extends Phaser.GameObjects.Container
             emitter.emit(constants.ADD_POINTS, 10);
             console.log(model.score);
             this.addAsteroid();
-        }
+        }*/
+    }
+
+    gameOver()
+    {
+        this.scene.scene.start("SceneOver");
+        emitter.emit(constants.SET_SCORE, 0);
+    }
+
+    addFuel()
+    {
+        this.boost.destroy();
+
+        console.log("FUEL FULL");
+
+        boostRespawnTimer = this.scene.time.delayedCall(2000, this.addBoost, [], this);
+
+        //emitter.on(constants.ADD_FUEL, this.addFuel, this);
+
+        fuelTimer.reset();
+        fuelTimer = this.scene.time.addEvent({
+            callback: this.gameOver,
+            callbackScope: this,
+            delay: fuelLifetime * 1000
+        });
+
     }
 
     moveBoost()
     {
         this.boost.x -= this.boost.speed;
 
-        if (Collision.checkCollision(this.ship, this.boost) == true)
+        /*if (Collision.checkCollision(this.ship, this.boost) == true)
         {
             this.ship.alpha = 0.5;
             this.boost.destroy();
@@ -201,7 +267,7 @@ class Space extends Phaser.GameObjects.Container
         else
         {
             this.ship.alpha = 1;
-        }
+        }*/
 
         if (this.boost.x < - game.config.width * 0.5)
         {
