@@ -7,45 +7,37 @@ class SceneOver extends Phaser.Scene
 
     preload()
     {
-        this.load.image("brokenShip", "images/GAME_OVER_title.png");
+        //prelaod images
+        this.load.image("gameOver", "images/GAME_OVER_title.png");
         this.load.image("playButton", "images/buttons/2/2.png");
         this.load.image("quitButton", "images/buttons/2/5.png");
-        //this.load.image("face", "images/face.png");
 
+        //preload audio
         this.load.audio("backgroundSound", "ObservatingTheStar.ogg");
         
-        //Fonts
+        //preload Fonts
         this.load.bitmapFont("ArcadeClassicFont", "fonts/ArcadeClassicFont.png", "fonts/ArcadeClassicFont.fnt");
     }
 
     create()
     {
         console.log("Scene Over!");
-        //this.alignGrid = new AlignGrid({rows: 11, cols: 11, scene: this})
-        //this.alignGrid.showNumbers();
 
+        //create a new mediamanager that will play the audio file
         var mediaManager = new MediaManager({scene: this});
 
         //TITLE CONFIG
-        var title = this.add.image(0, 0, "brokenShip");
+        var title = this.add.image(0, 0, "gameOver");
 
+        //title position
         title.x = game.config.width / 2;
         title.y = game.config.height / 3;
 
+        //title scale
         title.scaleX = game.config.width * 0.001;
         title.scaleY = game.config.height * 0.0015;
-        //this.alignGrid.placeAtIndex(11, title);
 
-        /*var playButton = new FlatButton({
-            scene: this,
-            key: "playButton",
-            text: "PLAY AGAIN",
-            x: game.config.width / 2,
-            y: game.config.height * 0.6,
-            alpha: 1,
-            event: "play_button_pressed"
-        }).setDepth(2);*/
-
+        //setting up a button to return for the title scene and utting it above the background
         var quitButton = new FlatButton({
             scene: this,
             key: "quitButton",
@@ -56,28 +48,24 @@ class SceneOver extends Phaser.Scene
             event: "quit_button_pressed"
         }).setDepth(2);
 
-        //playButton.scaleX = game.config.width * 0.001;
-        //playButton.scaleY = game.config.height * 0.002;
-
+        //quit game button scales
         quitButton.scaleX = game.config.width * 0.0008;
         quitButton.scaleY = game.config.height * 0.0015;
 
+        //event that call a function for the button when it gets pressed
         emitter.on("quit_button_pressed", this.quitButtonPressed, this);
-        //emitter.on("play_button_pressed", this.playButtonPressed, this);
 
+        //call the function to play the background music
         mediaManager.setBackgroundMusic("backgroundSound");
     }
 
+    //update function
     update()
     {
 
     }
 
-    playButtonPressed()
-    {
-        this.scene.start("SceneMain");
-    }
-
+    //function to return to the main menu
     quitButtonPressed()
     {
         this.scene.start("SceneTitle");

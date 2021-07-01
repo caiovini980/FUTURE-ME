@@ -24,7 +24,7 @@ function onDeviceReady()
         physics: {
             default: 'arcade',
             arcade: {
-              debug: false,
+              debug: true,
             }
           },
         ...scale
